@@ -51,10 +51,16 @@
 
         //préparation de  la requête
         $requete = $connexion->prepare(
-            "INSERT INTO produits ( nom, description, prix, url_image) VALUES ('un nom', 'une description', '55', 'toto.jpg')"
+            'INSERT INTO produits ( nom, description, prix, url_image) VALUES (?, ?, ?, ?)'
         );
+
         //execution de la requête
-        $requete->execute();
+        $requete->execute([
+            $_POST['nom'],
+            $_POST['description'],
+            $_POST['prix'],
+            $_POST['url_image'],
+        ]);
     }
 } ?>
 
@@ -63,11 +69,30 @@
             echo 'has-danger';
         } ?>">
             <label class="col-form-label mt-4" for="inputNom">Nom</label>
-            <input name="nom" type="text" class="form-control <?php if (
-                $erreurNom
-            ) {
-                echo 'is-invalid';
-            } ?>" placeholder="Nom du produit" id="inputNom">
+
+            <?php
+            /*
+            
+            la ligne : <?= $_POST['nom'] ?? '' ?>
+            est un racourci pour écrire :
+            <?php 
+            if(isset($_POST['nom'])) {
+                echo $_POST['nom'];
+            } else {
+                echo ""
+            } ?>
+
+            C'est à dire : si il y a un index "nom" dans le tableau $_POST alors on l'écrit, sinon on ecrit rien
+
+            Autrement dit : si il y a eu une erreur dans le nom (ex > à 10 caractères) alors on laisse le texte dans le champs
+*/
+            ?>
+            
+            <input value="<?= $_POST['nom'] ?? '' ?>" name="nom" type="text" class="form-control <?php if (
+    $erreurNom
+) {
+    echo 'is-invalid';
+} ?>" placeholder="Nom du produit" id="inputNom">
             <div class="invalid-feedback"><?= $messageErreurNom ?></div>
         </div>
 
