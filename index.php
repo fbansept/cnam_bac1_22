@@ -1,5 +1,6 @@
 <?php include 'header.php'; ?> 
 
+
 <?php include 'navbar.php'; ?>
 
 <div class="container">
@@ -34,10 +35,21 @@ foreach ($listeArticles as $article) { ?>
         <div class="card-body">
             <p class="card-text"><?= $article['description'] ?></p>
 
-            <a href="supprimer-produit.php?id=<?= $article['id'] ?>" class="btn btn-danger">Supprimer</a>
-            <a href="modifier-produit.php?id=<?= $article['id'] ?>" class="btn btn-primary">
+            <?php if (
+                isset($_SESSION['id']) &&
+                $_SESSION['administrateur'] == 1
+            ) { ?>
+
+            <a href="supprimer-produit.php?id=<?= $article[
+                'id'
+            ] ?>" class="btn btn-danger">Supprimer</a>
+            <a href="modifier-produit.php?id=<?= $article[
+                'id'
+            ] ?>" class="btn btn-primary">
                 Modifier
             </a>
+
+            <?php } ?>
         </div>
     </div>
 </div>

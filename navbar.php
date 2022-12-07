@@ -13,6 +13,35 @@
         <li class="nav-item">
           <a class="nav-link" href="ajout-produit.php">Ajout produit</a>
         </li>
+
+        <?php if (!isset($_SESSION['id'])) { ?>
+
+          <li class="nav-item">
+            <a class="nav-link" href="connexion.php">Connexion</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="inscription.php">Inscription</a>
+          </li>
+
+        <?php } else { ?>
+
+          <li class="nav-item">
+            <a class="nav-link" href="deconnexion.php">Déconnexion</a>
+          </li>
+
+        <?php } ?>
+
+        <?php if (isset($_SESSION['id'])) { ?>
+
+           <li class="nav-item">
+            <span class="nav-link" >
+              Bienvenue <?= $_SESSION['login'] ?>
+            </span>
+          </li>
+
+        <?php } ?>
+
       </ul>
       <form class="d-flex">
         <input class="form-control me-sm-2" type="text" placeholder="Search">
