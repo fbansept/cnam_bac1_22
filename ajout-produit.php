@@ -58,13 +58,15 @@ if (isset($_POST['nom'])) {
 
         //préparation de  la requête
         $requete = $connexion->prepare(
-            'INSERT INTO produits ( nom, description, prix, url_image) VALUES (?, ?, ?, ?)'
+            'INSERT INTO produits ( nom, description,description_en, prix, url_image) 
+             VALUES (?, ?, ?, ?, ?)'
         );
 
         //execution de la requête
         $requete->execute([
             $_POST['nom'],
             $_POST['description'],
+            $_POST['descriptionEn'],
             $_POST['prix'],
             $_POST['url_image'],
         ]);
@@ -106,6 +108,12 @@ if (isset($_POST['nom'])) {
         <div class="form-group">
             <label for="inputDescription" class="form-label mt-4">Description</label>
             <textarea name="description" class="form-control" id="inputDescription" rows="3"></textarea>
+            <div class="invalid-feedback">20 caractères minimum</div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputDescriptionEn" class="form-label mt-4">Description anglais</label>
+            <textarea name="descriptionEn" class="form-control" id="inputDescriptionEn" rows="3"></textarea>
             <div class="invalid-feedback">20 caractères minimum</div>
         </div>
 

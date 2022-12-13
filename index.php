@@ -18,6 +18,14 @@ $requete->execute();
 //affectation du résulat dans la vaiable $listeArticle
 $listeArticles = $requete->fetchAll();
 
+//on trouve la colonne description à afficher selon la langue selectionnée
+//("description" ou "description_en" , voir + si on ajoute des langues)
+$colonneDescription = 'description';
+
+if (isset($_SESSION['langue']) && $_SESSION['langue'] != 'fr') {
+    $colonneDescription = 'description_' . $_SESSION['langue'];
+}
+
 foreach ($listeArticles as $article) { ?>
 
 <div class="col-6 produit">
@@ -29,7 +37,7 @@ foreach ($listeArticles as $article) { ?>
         </div>
         <img src="<?= $article['url_image'] ?>">
         <div class="card-body">
-            <p class="card-text"><?= $article['description'] ?></p>
+            <p class="card-text"><?= $article[$colonneDescription] ?></p>
 
             <?php if (
                 isset($_SESSION['id']) &&

@@ -21,7 +21,8 @@ if (isset($_POST['nom'])) {
     $requete = $connexion->prepare(
         "UPDATE produits 
          SET nom = ?, 
-             description = ?, 
+             description = ?,
+             description_en = ?, 
              prix = ?,
              url_image = ?
          WHERE id = ?"
@@ -30,6 +31,7 @@ if (isset($_POST['nom'])) {
     $requete->execute([
         $_POST['nom'],
         $_POST['description'],
+        $_POST['descriptionEn'],
         $_POST['prix'],
         $_POST['url_image'],
         $_GET['id'],
@@ -65,6 +67,12 @@ $produit = $requete->fetch();
             <textarea name="description" class="form-control" id="inputDescription" rows="3"><?= $produit[
                 'description'
             ] ?></textarea>
+            <div class="invalid-feedback">20 caractères minimum</div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputDescriptionEn" class="form-label mt-4">Description anglais</label>
+            <textarea name="descriptionEn" class="form-control" id="inputDescriptionEn" rows="3"><?= $produit['description_en']?></textarea>
             <div class="invalid-feedback">20 caractères minimum</div>
         </div>
 
