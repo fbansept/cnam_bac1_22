@@ -5,15 +5,18 @@
 <h1>Modifier produit</h1>
 
 <?php
-$connexion = new PDO(
-    'mysql:host=localhost;dbname=cours_cnam_bac1_22;charset=utf8',
-    'root',
-    ''
-);
+include 'connexion-bdd.php';
+
+//si l'utilisateur n'est pas connecté 
+//ou qu'il n'est pas administrateur
+//on le redirige vers la page de connexion
+if (!isset($_SESSION['administrateur']) 
+    || $_SESSION['administrateur'] != 1) {
+        header("Location: connexion.php");
+}
 
 //si l'utilisateur a soumis le formulaire
 if (isset($_POST['nom'])) {
-
     //on enregistre les modifications
     $requete = $connexion->prepare(
         "UPDATE produits 
@@ -59,7 +62,9 @@ $produit = $requete->fetch();
 
         <div class="form-group">
             <label for="inputDescription" class="form-label mt-4">Description</label>
-            <textarea name="description" class="form-control" id="inputDescription" rows="3"><?= $produit['description'] ?></textarea>
+            <textarea name="description" class="form-control" id="inputDescription" rows="3"><?= $produit[
+                'description'
+            ] ?></textarea>
             <div class="invalid-feedback">20 caractères minimum</div>
         </div>
 

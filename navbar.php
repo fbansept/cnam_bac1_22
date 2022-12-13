@@ -10,9 +10,16 @@
         <li class="nav-item">
           <a class="nav-link active" href="index.php">Accueil</a>
         </li>
+
+        <?php if(isset($_SESSION["administrateur"]) &&
+                  $_SESSION['administrateur'] == 1) {
+          ?>
+
         <li class="nav-item">
           <a class="nav-link" href="ajout-produit.php">Ajout produit</a>
         </li>
+
+        <?php } ?>
 
         <?php if (!isset($_SESSION['id'])) { ?>
 

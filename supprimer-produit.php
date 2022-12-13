@@ -7,13 +7,17 @@ include 'navbar.php';
 
 <h1>Voulez-vous vraiment supprimer ce produit ? </h1>
 
-<?php if (isset($_GET['confirme'])) {
+<?php
+//si l'utilisateur n'est pas connecté
+//ou qu'il n'est pas administrateur
+//on le redirige vers la page de connexion
+if (!isset($_SESSION['administrateur']) || $_SESSION['administrateur'] != 1) {
+    header('Location: connexion.php');
+}
+
+if (isset($_GET['confirme'])) {
     //connexion base de donnée
-    $connexion = new PDO(
-        'mysql:host=localhost;dbname=cours_cnam_bac1_22;charset=utf8',
-        'root',
-        ''
-    );
+    include 'connexion-bdd.php';
 
     //préparation de  la requête
     $requete = $connexion->prepare('DELETE FROM produits WHERE id = ?');
@@ -23,7 +27,8 @@ include 'navbar.php';
 
     //On redirige vers la page index.php
     header('Location: index.php');
-} ?>
+}
+?>
 
 
 <a class="btn btn-danger"

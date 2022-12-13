@@ -2,27 +2,36 @@
 
 <?php include 'navbar.php'; ?>
 
-<?php if (isset($_POST['login'])) {
-    $connexion = new PDO(
-        'mysql:host=localhost;dbname=cours_cnam_bac1_22;charset=utf8',
-        'root',
-        ''
-    );
+<?php
+$erreur = '';
+
+if (isset($_POST['login'])) {
+    include 'connexion-bdd.php';
 
     //préparation de  la requête
     $requete = $connexion->prepare(
         'INSERT INTO utilisateur ( login , password ) VALUES (?, ?)'
     );
 
-    //execution de la requête
-    $requete->execute([$_POST['login'], $_POST['password']]);
+    $motDePasseBcrypt = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
-    header('Location: connexion.php');
-} ?>
+    try {
+        //execution de la requête
+        $requete->execute([$_POST['login'], $motDePasseBcrypt]);
+
+        header('Location: connexion.php');
+    } catch (PDOException $erreur) {
+        $erreur = 'Login déjà existant';
+    }
+}
+?>
+
+<h1>Inscription</h1>
 
 <form method="POST">
 
     <input name="login">
+    <?= $erreur ?>
     <input name="password" type="password">
     <input type="submit" value="inscription">
 

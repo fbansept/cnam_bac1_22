@@ -7,7 +7,18 @@
 <h1>Ajouter un nouvel article</h1>
 
 
-<?php if (isset($_POST['nom'])) {
+<?php 
+
+//si l'utilisateur n'est pas connecté 
+//ou qu'il n'est pas administrateur
+//on le redirige vers la page de connexion
+if (!isset($_SESSION['administrateur']) 
+    || $_SESSION['administrateur'] != 1) {
+        header("Location: connexion.php");
+}
+
+
+if (isset($_POST['nom'])) {
     //est-ce-que l'index "nom" existe dans le tableau $_POST ?
     //(autrement dit : si on a validé le formulaire)
 
@@ -43,11 +54,7 @@
     //SI il n'y a pas d'erreur dans le formulaire
     if (!$erreurNom) {
         //connexion base de donnée
-        $connexion = new PDO(
-            'mysql:host=localhost;dbname=cours_cnam_bac1_22;charset=utf8',
-            'root',
-            ''
-        );
+        include 'connexion-bdd.php';
 
         //préparation de  la requête
         $requete = $connexion->prepare(
