@@ -7,16 +7,13 @@
 <h1>Ajouter un nouvel article</h1>
 
 
-<?php 
-
-//si l'utilisateur n'est pas connecté 
+<?php
+//si l'utilisateur n'est pas connecté
 //ou qu'il n'est pas administrateur
 //on le redirige vers la page de connexion
-if (!isset($_SESSION['administrateur']) 
-    || $_SESSION['administrateur'] != 1) {
-        header("Location: connexion.php");
+if (!isset($_SESSION['administrateur']) || $_SESSION['administrateur'] != 1) {
+    header('Location: connexion.php');
 }
-
 
 if (isset($_POST['nom'])) {
     //est-ce-que l'index "nom" existe dans le tableau $_POST ?
@@ -56,6 +53,23 @@ if (isset($_POST['nom'])) {
         //connexion base de donnée
         include 'connexion-bdd.php';
 
+        $urlImage = $_POST['url_image'];
+
+        //si l'utilisateur à uploadé un fichier
+        if (isset($_FILES['fichier'])) {
+            $nomFichierTemporaire = $_FILES['fichier']['tmp_name'];
+
+            $date = new DateTime();
+            $dateFormat = $date->format('Y-m-d-H-i-s');
+
+            $nomFichierFinal =
+                'uploads/' . $dateFormat . '-' . $_FILES['fichier']['name'];
+
+            $urlImage = 'http://localhost/cnam_bac1_22/' . $nomFichierFinal;
+
+            move_uploaded_file($nomFichierTemporaire, $nomFichierFinal);
+        }
+
         //préparation de  la requête
         $requete = $connexion->prepare(
             'INSERT INTO produits ( nom, description,description_en, prix, url_image) 
@@ -68,19 +82,20 @@ if (isset($_POST['nom'])) {
             $_POST['description'],
             $_POST['descriptionEn'],
             $_POST['prix'],
-            $_POST['url_image'],
+            $urlImage,
         ]);
     }
-} ?>
+}
+?>
 
-    <form method="POST" onsubmit="return validerFormulaire();" class="container mb-4">
+    <form method="POST" enctype='multipart/form-data' onsubmit="return validerFormulaire();" class="container mb-4">
         <div class="form-group <?php if ($erreurNom) {
             echo 'has-danger';
         } ?>">
             <label class="col-form-label mt-4" for="inputNom">Nom</label>
 
             <?php
-            /*
+/*
             
             la ligne : <?= $_POST['nom'] ?? '' ?>
             est un racourci pour écrire :
@@ -95,9 +110,10 @@ if (isset($_POST['nom'])) {
 
             Autrement dit : si il y a eu une erreur dans le nom (ex > à 10 caractères) alors on laisse le texte dans le champs
 */
-            ?>
+?>
             
-            <input value="<?= $_POST['nom'] ?? '' ?>" name="nom" type="text" class="form-control <?php if (
+            <input value="<?= $_POST['nom'] ??
+                '' ?>" name="nom" type="text" class="form-control <?php if (
     $erreurNom
 ) {
     echo 'is-invalid';
@@ -127,7 +143,21 @@ if (isset($_POST['nom'])) {
             <label class="col-form-label mt-4" for="inputUrlImage">URL image</label>
             <input name="url_image" type="text" class="form-control" placeholder="URL de l'image (ex: http://mon-site.com/image.jpg)" id="inputUrlImage">
             <div class="invalid-feedback"></div>
+        </div><div class="form-group">
+            <label class="col-form-label mt-4" for="inputUrlImage">URL image</label>
+            <input name="url_image" type="text" class="form-control" placeholder="URL de l'image (ex: http://mon-site.com/image.jpg)" id="inputUrlImage">
+            <div class="invalid-feedback"></div>
         </div>
+
+        <div class="form-group">
+            <label class="col-form-label mt-4" for="inputFile">Fichier</label>
+            <input 
+                name="fichier" 
+                type="file"
+                class="form-control"
+                id="inputFile">
+        </div>
+
 
         <input type="submit" value="Ajouter l'article" class="btn btn-primary mt-4">
 
