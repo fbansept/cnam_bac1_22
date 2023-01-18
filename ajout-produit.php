@@ -57,6 +57,9 @@ if (isset($_POST['nom'])) {
 
         //si l'utilisateur à uploadé un fichier
         if (isset($_FILES['fichier'])) {
+
+            var_dump($_FILES);
+
             $nomFichierTemporaire = $_FILES['fichier']['tmp_name'];
 
             $date = new DateTime();

@@ -17,7 +17,7 @@ function i18n($phrase)
             'Déconnexion' => 'Sign out',
             'Bienvenue' => 'Welcome',
             'Recherche' => 'Search',
-        ],
+        ]
     ];
 
     if ($langue == 'fr') {
